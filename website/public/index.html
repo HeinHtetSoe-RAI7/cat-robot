@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CatGPT</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🐈‍⬛ CatGPT</h1>
+
+<div id="messages"></div>
+
+<div class="input-container">
+    <input type="text" id="input" placeholder="Type a message..." />
+    <button id="sendButton">Send</button>
+    <button id="micButton">🎤 Start</button>
+</div>
+
+<script type="module" src="chat.js"></script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat with Gemini AI</title>
+    <style>
+        /* General Page Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f73b7;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        /* Message container styles */
+        #messages {
+            flex-grow: 1; /* Make the messages container take up all remaining space */
+            padding: 10px;
+            overflow-y: auto;
+            margin: 0 20px 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Input container and button styles */
+        .input-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            border-top: 1px solid #ddd;
+        }
+
+        #input {
+            flex-grow: 1; /* Allows the input to take up most of the space */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #sendButton {
+            padding: 10px 20px;
+            background-color: #1f73b7;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        #sendButton:hover {
+            background-color: #1a5a92;
+        }
+
+        /* Message styles */
+        .message {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .user-message {
+            background-color: #e6f0ff;
+            text-align: right;
+            border-left: 4px solid #1f73b7;
+        }
+
+        .gemini-message {
+            background-color: #ffffff;
+            border-right: 4px solid #3cba54;
+        }
+
+        .gemini-message b {
+            color: #3cba54; /* Google Green */
+        }
+
+        .user-message b {
+            color: #1f73b7;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with CatGPT AI 💬</h1>
+
+    <div id="messages"></div>
+
+    <div class="input-container">
+        <input type="text" id="input" placeholder="Type a message..." />
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script>
+        // WebSocket connection
+        // *** IMPORTANT: You must have a WebSocket server running on ws://localhost:8765 
+        // that streams text and ends with "[[END]]" for this client to work.
+        const socket = new WebSocket("ws://localhost:8765");
+
+        // Get elements
+        const messagesDiv = document.getElementById("messages");
+        const inputField = document.getElementById("input");
+        const sendButton = document.getElementById("sendButton");
+
+        // Variable to hold the reference to the currently streaming Gemini message element
+        let currentGeminiMessageElement = null;
+
+        // WebSocket events
+        socket.onopen = () => {
+            console.log("Connected to WebSocket server");
+            // Optionally, display a connection message in the chat
+            let status = document.createElement("div");
+            status.innerHTML = "Server connected. Start chatting!";
+            messagesDiv.appendChild(status);
+        };
+
+        socket.onmessage = (event) => {
+            const chunk = event.data;
+
+            if (chunk === "[[END]]") {
+                // End marker received, finalize the response
+                currentGeminiMessageElement = null; // Reset for the next chat
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to the bottom
+                return;
+            }
+
+            if (!currentGeminiMessageElement) {
+                // First chunk of a new message. Create the element and append it.
+                currentGeminiMessageElement = document.createElement("div");
+                currentGeminiMessageElement.classList.add("message", "gemini-message");
+                // Use a span to contain the streaming text, starting after the bold label
+                currentGeminiMessageElement.innerHTML = "<b>Gemini:</b> <span id='stream-text'></span>"; 
+                messagesDiv.appendChild(currentGeminiMessageElement);
+            }
+            
+            // Get the streaming text element and append the chunk
+            const streamText = currentGeminiMessageElement.querySelector('#stream-text');
+            if (streamText) {
+                streamText.textContent += chunk;
+            }
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to the bottom
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket Error: ", error);
+            // Display error in chat
+            let errorMsg = document.createElement("div");
+            errorMsg.innerHTML = "Error: Could not connect to the server.";
+            messagesDiv.appendChild(errorMsg);
+        };
+
+        socket.onclose = () => {
+            console.log("WebSocket connection closed");
+            // Display status in chat
+            let status = document.createElement("div");
+            status.innerHTML = "Connection closed.";
+            messagesDiv.appendChild(status);
+        };
+
+        // Function to send the user's message
+        const sendMessage = () => {
+            const message = inputField.value.trim();
+            if (message && socket.readyState === WebSocket.OPEN) {
+                // Display user's message immediately
+                let userMessageDiv = document.createElement("div");
+                userMessageDiv.classList.add("message", "user-message");
+                userMessageDiv.innerHTML = "<b>You:</b> " + message;
+                messagesDiv.appendChild(userMessageDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                // Reset the current Gemini message element reference before sending
+                currentGeminiMessageElement = null;
+
+                // Send the message to WebSocket server
+                socket.send(message);
+                inputField.value = ''; // Clear input field
+            }
+        };
+
+        // Send message on button click
+        sendButton.onclick = sendMessage;
+
+        // Send message when pressing Enter key
+        inputField.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vosk Live Transcription</title>
+<style>
+body { font-family: sans-serif; text-align: center; margin: 2em; }
+button { margin: 1em; padding: 0.5em 1em; font-size: 1em; }
+#transcript {
+  margin-top: 2em;
+  border: 1px solid #ccc;
+  padding: 1em;
+  width: 80%;
+  min-height: 100px;
+  text-align: left;
+  display: inline-block;
+}
+</style>
+</head>
+<body>
+<h1>🎙️ Live Transcription with Vosk</h1>
+<button id="startBtn">Start Recording</button>
+<button id="stopBtn" disabled>Stop Recording</button>
+
+<div id="transcript"><i>Transcript will appear here...</i></div>
+
+<script>
+let ws, mediaStream, processor, audioContext;
+let finalTranscript = "";
+
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+
+startBtn.onclick = async () => {
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+
+  mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  audioContext = new AudioContext({ sampleRate: 16000 });
+  const source = audioContext.createMediaStreamSource(mediaStream);
+  processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+  ws = new WebSocket("ws://localhost:2700");
+
+  ws.onopen = () => console.log("✅ Connected to Vosk server");
+  ws.onclose = () => console.log("⚠️ Disconnected from server");
+  ws.onerror = (err) => console.error("WebSocket error:", err);
+
+  ws.onmessage = (event) => {
+    const result = JSON.parse(event.data);
+    if (result.partial) {
+      document.getElementById("transcript").innerText =
+        finalTranscript + " " + result.partial;
+    } else if (result.text) {
+      finalTranscript += " " + result.text;
+      document.getElementById("transcript").innerText = finalTranscript.trim();
+    }
+  };
+
+  processor.onaudioprocess = (e) => {
+    const inputData = e.inputBuffer.getChannelData(0);
+    const int16Data = floatTo16BitPCM(inputData);
+    if (ws.readyState === WebSocket.OPEN) ws.send(int16Data);
+  };
+
+  source.connect(processor);
+  processor.connect(audioContext.destination);
+};
+
+stopBtn.onclick = () => {
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+
+  if (processor) processor.disconnect();
+  if (audioContext) audioContext.close();
+  if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+
+  // Delay closing WS slightly to ensure final result arrives
+  setTimeout(() => {
+    if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+  }, 200);
+};
+
+function floatTo16BitPCM(float32Array) {
+  const buffer = new ArrayBuffer(float32Array.length * 2);
+  const view = new DataView(buffer);
+  let offset = 0;
+  for (let i = 0; i < float32Array.length; i++, offset += 2) {
+    let s = Math.max(-1, Math.min(1, float32Array[i]));
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  }
+  return buffer;
+}
+</script>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat with CatGPT 💬</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background-color: #f1f1f1;
+}
+h1 { text-align: center; padding: 20px 0; color: #1f73b7; }
+#messages {
+    flex-grow: 1;
+    padding: 10px;
+    margin: 0 20px 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-top: 1px solid #ddd;
+}
+#input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+#sendButton, #micButton {
+    padding: 10px 16px;
+    margin-left: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#sendButton { background-color: #1f73b7; color: white; }
+#sendButton:hover { background-color: #165a91; }
+#micButton { background-color: #3cba54; color: white; }
+#micButton:hover { background-color: #2a973a; }
+.message { margin-bottom: 10px; padding: 8px; border-radius: 6px; }
+.user-message { background-color: #e6f0ff; text-align: right; border-left: 4px solid #1f73b7; }
+.gemini-message { background-color: #ffffff; border-right: 4px solid #3cba54; }
+.transcript-message { background-color: #fff3e6; border-left: 4px solid #f39c12; font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>Chat with CatGPT 💬</h1>
+
+<div id="messages"></div>
+
+<div class="input-container">
+    <input type="text" id="input" placeholder="Type a message..." />
+    <button id="sendButton">Send</button>
+    <button id="micButton">🎤 Start</button>
+</div>
+
+<script>
+const messagesDiv = document.getElementById("messages");
+const inputField = document.getElementById("input");
+const sendButton = document.getElementById("sendButton");
+const micButton = document.getElementById("micButton");
+
+let wsVosk, mediaStream, processor, audioContext;
+let finalTranscript = "";
+let recording = false;
+
+// Gemini WS
+const wsGemini = new WebSocket("ws://localhost:8765");
+let currentGeminiMessageElement = null;
+
+wsGemini.onmessage = (event) => {
+    const chunk = event.data;
+    if(chunk === "[[END]]") {
+        currentGeminiMessageElement = null;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        return;
+    }
+    if(!currentGeminiMessageElement) {
+        currentGeminiMessageElement = document.createElement("div");
+        currentGeminiMessageElement.classList.add("message", "gemini-message");
+        currentGeminiMessageElement.innerHTML = "<b>Gemini:</b> <span id='stream-text'></span>";
+        messagesDiv.appendChild(currentGeminiMessageElement);
+    }
+    const streamText = currentGeminiMessageElement.querySelector('#stream-text');
+    if(streamText) streamText.textContent += chunk;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+};
+
+// Text message send
+const sendMessage = () => {
+    const message = inputField.value.trim();
+    if(message && wsGemini.readyState === WebSocket.OPEN) {
+        // Show user message
+        let userDiv = document.createElement("div");
+        userDiv.classList.add("message", "user-message");
+        userDiv.innerHTML = "<b>You:</b> " + message;
+        messagesDiv.appendChild(userDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        currentGeminiMessageElement = null;
+        wsGemini.send(message);
+        inputField.value = '';
+    }
+};
+sendButton.onclick = sendMessage;
+inputField.addEventListener("keypress", (e)=> { if(e.key === "Enter") sendMessage(); });
+
+// Mic button toggles recording
+micButton.onclick = async () => {
+    if(!recording) {
+        micButton.textContent = "⏹ Stop";
+        recording = true;
+        finalTranscript = "";
+        startRecording();
+    } else {
+        micButton.textContent = "🎤 Start";
+        recording = false;
+        stopRecording();
+    }
+};
+
+async function startRecording() {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioContext = new AudioContext({ sampleRate: 16000 });
+    const source = audioContext.createMediaStreamSource(mediaStream);
+    processor = audioContext.createScriptProcessor(4096,1,1);
+
+    wsVosk = new WebSocket("ws://localhost:2700");
+    wsVosk.binaryType = "arraybuffer";
+
+    wsVosk.onmessage = (event) => {
+        const result = JSON.parse(event.data);
+        let transcriptDiv = document.getElementById("transcript-msg");
+        if(!transcriptDiv) {
+            transcriptDiv = document.createElement("div");
+            transcriptDiv.id = "transcript-msg";
+            transcriptDiv.classList.add("message","transcript-message");
+            transcriptDiv.innerHTML = "<b>Voice:</b> <span id='voice-text'></span>";
+            messagesDiv.appendChild(transcriptDiv);
+        }
+        const voiceText = transcriptDiv.querySelector("#voice-text");
+        if(result.partial) voiceText.textContent = finalTranscript + " " + result.partial;
+        if(result.text) {
+            finalTranscript += " " + result.text;
+            voiceText.textContent = finalTranscript.trim();
+        }
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    };
+
+    processor.onaudioprocess = (e) => {
+        const inputData = e.inputBuffer.getChannelData(0);
+        const int16Data = floatTo16BitPCM(inputData);
+        if(wsVosk.readyState === WebSocket.OPEN) wsVosk.send(int16Data);
+    };
+
+    source.connect(processor);
+    processor.connect(audioContext.destination);
+}
+
+function stopRecording() {
+    if(processor) processor.disconnect();
+    if(audioContext) audioContext.close();
+    if(mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+    if(wsVosk && wsVosk.readyState === WebSocket.OPEN) wsVosk.close();
+
+    // Optionally send final transcript to Gemini automatically
+    if(finalTranscript.trim() && wsGemini.readyState === WebSocket.OPEN) {
+        inputField.value = finalTranscript.trim();
+        sendMessage();
+    }
+}
+
+function floatTo16BitPCM(float32Array) {
+    const buffer = new ArrayBuffer(float32Array.length*2);
+    const view = new DataView(buffer);
+    let offset = 0;
+    for(let i=0;i<float32Array.length;i++,offset+=2){
+        let s = Math.max(-1,Math.min(1,float32Array[i]));
+        view.setInt16(offset,s<0?s*0x8000:s*0x7FFF,true);
+    }
+    return buffer;
+}
+</script>
+</body>
+</html> -->
+
+

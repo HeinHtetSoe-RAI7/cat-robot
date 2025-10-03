@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+# *.env
+.venv/
+
+# Vosk models (if large and can be downloaded separately)
+# vosk_asr/models/
+
+# Logs
+*.log
+
+# IDE / Editor
+.vscode/
+
+# Node
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+*.dockerignore

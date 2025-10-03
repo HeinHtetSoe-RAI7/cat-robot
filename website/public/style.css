@@ -1,0 +1,143 @@
+/* body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background-color: #f1f1f1;
+}
+h1 { text-align: center; padding: 20px 0; color: #1f73b7; }
+#messages {
+    flex-grow: 1;
+    padding: 10px;
+    margin: 0 20px 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-top: 1px solid #ddd;
+}
+#input { flex-grow: 1; padding: 10px; font-size: 16px; border:1px solid #ccc; border-radius:4px; }
+#sendButton, #micButton {
+    padding: 10px 16px;
+    margin-left: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#sendButton { background-color: #1f73b7; color: white; }
+#sendButton:hover { background-color: #165a91; }
+#micButton { background-color: #3cba54; color: white; }
+#micButton:hover { background-color: #2a973a; }
+.message { margin-bottom: 10px; padding: 8px; border-radius: 6px; }
+.user-message { background-color: #e6f0ff; text-align: right; border-left: 4px solid #1f73b7; }
+.gemini-message { background-color: #ffffff; border-right: 4px solid #3cba54; }
+.transcript-message { background-color: #fff3e6; border-left: 4px solid #f39c12; font-style: italic; } */
+
+/* --- DARK MODE STYLES --- */
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    /* Dark background */
+    background-color: #121212; 
+    color: #e0e0e0; /* Light text for readability */
+}
+
+h1 { 
+    text-align: center; 
+    padding: 20px 0; 
+    color: #7b9fff; /* Brighter accent for the header */
+}
+
+#messages {
+    flex-grow: 1;
+    padding: 10px;
+    margin: 0 20px 10px;
+    border-radius: 8px;
+    /* Lighter dark background for the chat area */
+    background-color: #1e1e1e; 
+    overflow-y: auto;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.5); /* Darker shadow */
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    /* Matches the chat background */
+    background-color: #1e1e1e; 
+    border-top: 1px solid #333;
+}
+
+#input { 
+    flex-grow: 1; 
+    padding: 10px; 
+    font-size: 16px; 
+    /* Input field colors */
+    border: 1px solid #444; 
+    border-radius: 4px; 
+    background-color: #252525;
+    color: #e0e0e0;
+}
+
+/* Original button styles remain effective, but hover can be tweaked */
+#sendButton, #micButton {
+    padding: 10px 16px;
+    margin-left: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#sendButton { 
+    background-color: #1f73b7; 
+    color: white; 
+}
+#sendButton:hover { 
+    background-color: #165a91; 
+}
+
+#micButton { 
+    background-color: #3cba54; 
+    color: white; 
+}
+#micButton:hover { 
+    background-color: #2a973a; 
+}
+
+.message { 
+    margin-bottom: 10px; 
+    padding: 8px; 
+    border-radius: 6px;
+    color: #e0e0e0; /* Ensure text is light */
+}
+
+/* Retain original accent colors for borders, but adjust bubble background */
+.user-message { 
+    background-color: #2a3c5a; /* Darker blue shade */
+    text-align: right; 
+    border-left: 4px solid #1f73b7; 
+}
+
+.gemini-message { 
+    background-color: #252525; /* Subtle difference from chat background */
+    border-right: 4px solid #3cba54; 
+}
+
+.transcript-message { 
+    background-color: #4a3e2a; /* Darker orange shade */
+    border-left: 4px solid #f39c12; 
+    font-style: italic; 
+}
