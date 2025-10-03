@@ -35,10 +35,4 @@ services:
     container_name: node_website
     ports:
       - "3000:3000"  # Expose port 3000 to access the app
-    volumes:
-      - ./website:/app  # Mount the current directory to /app in the container (useful for development)
-    devices:
-      - "/dev/snd:/dev/snd"  # Allow Docker container to access the host's sound devices
-    # environment:
-    #   - NODE_ENV=production
     restart: always
