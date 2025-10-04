@@ -8,27 +8,14 @@ services:
       - ./vosk_asr/models:/app/models
       - ./pip_cache:/root/.cache/pip
 
-  gemini_server:
-    build: ./gemini
-    container_name: gemini_server
+  gemini-server:
+    build: ./gemini_server
+    container_name: gemini-server
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     ports:
       - "8765:8765"
-    tty: true
-    volumes:
-      - ./pip_cache:/root/.cache/pip  # mount host folder for persistent pip cache
-
-  # gemini_client:
-  #   build: ./websockets
-  #   container_name: gemini_client
-  #   depends_on:
-  #     - gemini_server
-  #   stdin_open: true
-  #   tty: true
-  #   command: python ws_client.py
-  #   volumes:
-  #     - ./pip_cache:/root/.cache/pip
+    restart: unless-stopped
 
   node-website:
     build: ./website

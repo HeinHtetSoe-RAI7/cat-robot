@@ -30,7 +30,7 @@ async def recognize(websocket):
 
 async def main():
     async with websockets.serve(recognize, "0.0.0.0", 2700):
-        print("✅ Vosk WebSocket server running at ws://0.0.0.0:2700")
+        print("✅ Vosk webSocket server running at ws://localhost:2700")
         await asyncio.Future()  # run forever
 
 
