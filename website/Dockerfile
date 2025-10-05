@@ -37,3 +37,22 @@ COPY . .
 
 EXPOSE 3000
 CMD ["npm", "start"]
+
+# # Stage 1: build
+# FROM golang:1.24.4-alpine AS builder
+
+# WORKDIR /app
+# COPY . .
+
+# # Build statically linked binary
+# RUN go build -o server main.go
+
+# # Stage 2: run (minimal image)
+# FROM alpine:latest
+
+# WORKDIR /app
+# COPY --from=builder /app/server .
+# COPY public ./public
+
+# EXPOSE 8080
+# CMD ["./server"]
