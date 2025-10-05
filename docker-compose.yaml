@@ -1,4 +1,7 @@
+version: '3.8'
+
 services:
+  # Your existing services
   vosk_asr:
     container_name: vosk_asr
     build: ./vosk_asr
@@ -7,6 +10,7 @@ services:
     volumes:
       - ./vosk_asr/models:/app/models
       - ./pip_cache:/root/.cache/pip
+    restart: unless-stopped
 
   gemini_server:
     build: ./gemini
@@ -17,22 +21,78 @@ services:
       - "8765:8765"
     tty: true
     volumes:
-      - ./pip_cache:/root/.cache/pip  # mount host folder for persistent pip cache
-
-  # gemini_client:
-  #   build: ./websockets
-  #   container_name: gemini_client
-  #   depends_on:
-  #     - gemini_server
-  #   stdin_open: true
-  #   tty: true
-  #   command: python ws_client.py
-  #   volumes:
-  #     - ./pip_cache:/root/.cache/pip
+      - ./pip_cache:/root/.cache/pip
+    restart: unless-stopped
 
   node-website:
     build: ./website
     container_name: node_website
     ports:
-      - "3000:3000"  # Expose port 3000 to access the app
+      - "3000:3000"
     restart: always
+    depends_on:
+      - backend
+      - postgres
+
+  # New services for user management and database
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://chat_user:chat_password@postgres:5432/chatdb
+      - JWT_SECRET=chat_app_jwt_secret_key_2024_secure_123!
+      - GEMINI_WS_URL=ws://gemini_server:8765
+      - VOSK_WS_URL=ws://vosk_asr:2700
+    depends_on:
+      - postgres
+      - gemini_server
+      - vosk_asr
+    volumes:
+      - ./backend:/app
+      - ./pip_cache:/root/.cache/pip
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=chatdb
+      - POSTGRES_USER=chat_user
+      - POSTGRES_PASSWORD=chat_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  dbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: dbeaver
+    ports:
+      - "8978:8978"
+    environment:
+      - CB_SERVER_NAME=ChatApp DBeaver
+    volumes:
+      - dbeaver_data:/opt/cloudbeaver/workspace
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+      - node-website
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  dbeaver_data:
