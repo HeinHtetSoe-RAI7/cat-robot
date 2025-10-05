@@ -47,28 +47,51 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100vh; /* Ensures full height */
     margin: 0;
     /* Dark background */
     background-color: #121212; 
     color: #e0e0e0; /* Light text for readability */
 }
 
+header {
+    padding: 20px 20px 0;
+    text-align: center;
+}
+
 h1 { 
-    text-align: center; 
-    padding: 20px 0; 
+    margin-top: 0; /* Remove default h1 top margin */
+    margin-bottom: 10px; /* Space below h1 */
     color: #7b9fff; /* Brighter accent for the header */
+}
+
+/* New/Fixed status bar styling */
+#geminiStatus {
+    font-weight: bold;
+    font-size: 0.9em;
+    padding: 5px 0;
+    text-align: center; /* Center the text */
+    /* The color will be set dynamically by chat.js */
 }
 
 #messages {
     flex-grow: 1;
     padding: 10px;
-    margin: 0 20px 10px;
+    margin: 0 20px 20px;
     border-radius: 8px;
     /* Lighter dark background for the chat area */
     background-color: #1e1e1e; 
     overflow-y: auto;
     box-shadow: 0px 4px 6px rgba(0,0,0,0.5); /* Darker shadow */
+}
+
+/* Ensure messages area takes up available space */
+.message { 
+    margin-bottom: 10px; 
+    padding: 8px; 
+    border-radius: 6px;
+    color: #e0e0e0; 
+    word-wrap: break-word; /* Ensures long words don't overflow */
 }
 
 .input-container {
@@ -89,16 +112,16 @@ h1 {
     border-radius: 4px; 
     background-color: #252525;
     color: #e0e0e0;
+    margin-right: 10px; /* Add space between input and buttons */
 }
 
-/* Original button styles remain effective, but hover can be tweaked */
 #sendButton, #micButton {
     padding: 10px 16px;
-    margin-left: 10px;
     font-size: 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    flex-shrink: 0; /* Prevents buttons from shrinking */
 }
 
 #sendButton { 
@@ -112,19 +135,13 @@ h1 {
 #micButton { 
     background-color: #3cba54; 
     color: white; 
+    margin-left: 10px;
 }
 #micButton:hover { 
     background-color: #2a973a; 
 }
 
-.message { 
-    margin-bottom: 10px; 
-    padding: 8px; 
-    border-radius: 6px;
-    color: #e0e0e0; /* Ensure text is light */
-}
-
-/* Retain original accent colors for borders, but adjust bubble background */
+/* Message Bubble Styles */
 .user-message { 
     background-color: #2a3c5a; /* Darker blue shade */
     text-align: right; 

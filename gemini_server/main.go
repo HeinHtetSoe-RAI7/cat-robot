@@ -78,7 +78,7 @@ import (
 	"google.golang.org/genai"
 )
 
-const modelName = "gemini-2.5-flash"
+const modelName = "gemini-2.5-flash-lite"
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
@@ -95,6 +95,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// System instruction
+	systemInstruction := "You are a student (a kid) practicing English with your teacher. " +
+		"You will receive sentences from your teacher. " +
+		"Your role is to behave like a curious kid, respond naturally, and keep a childlike tone."
 
 	// WebSocket endpoint
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -117,12 +122,27 @@ func main() {
 
 			log.Printf("Received: %s", string(message))
 
+			// build the user contents slice
+			contents := []*genai.Content{
+				genai.NewContentFromText(string(message), genai.RoleUser),
+			}
+
+			// config: put the system instruction here
+			cfg := &genai.GenerateContentConfig{
+				SystemInstruction: genai.NewContentFromText(systemInstruction, genai.Role("system")),
+				// optional: tweak generation behavior:
+				// CandidateCount: 1,
+				// MaxOutputTokens: 512,
+			}
+
 			// Stream response from Gemini
 			results := client.Models.GenerateContentStream(
 				ctx,
 				modelName,
-				genai.Text(string(message)),
-				nil,
+				contents,
+				cfg,
+				// genai.Text(systemInstruction+string(message)),
+				// nil,
 			)
 
 			for result := range results {

@@ -1,7 +1,7 @@
 {
-  "name": "audio-recorder",
+  "name": "catgpt",
   "version": "1.0.0",
-  "description": "A simple audio recorder app with frontend and backend",
+  "description": "A simple AI chat website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
