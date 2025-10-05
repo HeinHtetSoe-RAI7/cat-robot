@@ -1,7 +1,7 @@
 {
-  "name": "audio-recorder",
+  "name": "catgpt",
   "version": "1.0.0",
-  "description": "A simple audio recorder app with frontend and backend",
+  "description": "A simple AI chat website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,12 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.12.2",
     "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.9.3",
     "web-vitals": "^3.0.0"
+=======
+>>>>>>> 6b067c732b1e6c581c07fcd325a2b72d456417dc
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

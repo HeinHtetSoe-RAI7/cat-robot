@@ -1,4 +1,40 @@
+<<<<<<< HEAD
 version: '3.8'
+=======
+# services:
+#   vosk_asr:
+#     container_name: vosk_asr
+#     build: ./vosk_asr
+#     ports:
+#       - "2700:2700"
+#     volumes:
+#       - ./vosk_asr/models:/app/models
+#       - ./pip_cache:/root/.cache/pip
+
+#   # vosk-server:
+#   #   container_name: vosk_server
+#   #   build: ./vosk_server
+#   #   ports:
+#   #     - "2700:2700"
+#   #   volumes:
+#   #     - ./vosk_server/models:/app/models
+
+#   gemini-server:
+#     build: ./gemini_server
+#     container_name: gemini-server
+#     environment:
+#       - GEMINI_API_KEY=${GEMINI_API_KEY}
+#     ports:
+#       - "8765:8765"
+#     restart: unless-stopped
+
+#   node-website:
+#     build: ./website
+#     container_name: node_website
+#     ports:
+#       - "3000:3000"  # Expose port 3000 to access the app
+#     restart: always
+>>>>>>> 6b067c732b1e6c581c07fcd325a2b72d456417dc
 
 services:
   # Your existing services
@@ -10,19 +46,28 @@ services:
     volumes:
       - ./vosk_asr/models:/app/models
       - ./pip_cache:/root/.cache/pip
+<<<<<<< HEAD
     restart: unless-stopped
+=======
+    # No dependencies - this is a standalone service
+>>>>>>> 6b067c732b1e6c581c07fcd325a2b72d456417dc
 
-  gemini_server:
-    build: ./gemini
-    container_name: gemini_server
+  gemini-server:
+    build: ./gemini_server
+    container_name: gemini-server
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     ports:
       - "8765:8765"
+<<<<<<< HEAD
     tty: true
     volumes:
       - ./pip_cache:/root/.cache/pip
     restart: unless-stopped
+=======
+    restart: unless-stopped
+    # No dependencies - standalone service
+>>>>>>> 6b067c732b1e6c581c07fcd325a2b72d456417dc
 
   node-website:
     build: ./website
@@ -31,6 +76,7 @@ services:
       - "3000:3000"
     restart: always
     depends_on:
+<<<<<<< HEAD
       - backend
       - postgres
 
@@ -96,3 +142,10 @@ services:
 volumes:
   postgres_data:
   dbeaver_data:
+=======
+      - vosk_asr
+      - gemini-server
+    environment:
+      - VOSK_WS_URL=ws://vosk_asr:2700
+      - GEMINI_WS_URL=ws://gemini-server:8765
+>>>>>>> 6b067c732b1e6c581c07fcd325a2b72d456417dc

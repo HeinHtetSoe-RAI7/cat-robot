@@ -2,17 +2,50 @@ const messagesDiv = document.getElementById("messages");
 const inputField = document.getElementById("input");
 const sendButton = document.getElementById("sendButton");
 const micButton = document.getElementById("micButton");
+const geminiStatusDiv = document.getElementById("geminiStatus");
 
 let wsVosk, mediaStream, audioContext, workletNode;
 let finalTranscript = "";
 let recording = false; // Single source of truth for recording state
 
+// Function to update the status display
+const updateGeminiStatus = (status, color = "black") => {
+  if (geminiStatusDiv) {
+    geminiStatusDiv.textContent = `Gemini Server Status: ${status}`;
+    geminiStatusDiv.style.color = color;
+  }
+};
+
 // Gemini WS
 const wsGemini = new WebSocket("ws://localhost:8765");
 let currentGeminiMessageElement = null;
 
+// Add connection handlers
+wsGemini.onopen = () => {
+  console.log("Gemini WS Connected");
+  updateGeminiStatus("Connected", "green");
+};
+
+wsGemini.onclose = () => {
+  console.log("Gemini WS Disconnected");
+  updateGeminiStatus("Disconnected", "red");
+};
+
+wsGemini.onerror = (error) => {
+  console.error("Gemini WS Error:", error);
+  updateGeminiStatus("Error", "red");
+};
+
+// Set initial status
+if (wsGemini.readyState === WebSocket.CONNECTING) {
+  updateGeminiStatus("Connecting...", "orange");
+} else if (wsGemini.readyState === WebSocket.OPEN) {
+  updateGeminiStatus("Connected", "green");
+}
+
 wsGemini.onmessage = (event) => {
   const chunk = event.data;
+  // ... (rest of wsGemini.onmessage is unchanged)
   if (chunk === "[[END]]") {
     currentGeminiMessageElement = null;
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -32,6 +65,7 @@ wsGemini.onmessage = (event) => {
 
 // Text message send
 const sendMessage = () => {
+  // ... (rest of sendMessage is unchanged)
   const message = inputField.value.trim();
   if (message && wsGemini.readyState === WebSocket.OPEN) {
     let userDiv = document.createElement("div");
@@ -52,6 +86,7 @@ inputField.addEventListener("keypress", (e) => {
 
 // Mic button handler (Single Source of Truth)
 micButton.onclick = async () => {
+  // ... (rest of micButton.onclick is unchanged)
   // Ensure AudioContext is resumed/started on user interaction
   if (audioContext && audioContext.state === "suspended") {
     audioContext.resume();
@@ -76,6 +111,7 @@ micButton.onclick = async () => {
 
 // startRecording
 async function startRecording() {
+  // ... (rest of startRecording is unchanged)
   // Ensure we stop if the process is already running or being called again accidentally
   if (wsVosk || workletNode) stopRecording(false);
 
@@ -155,6 +191,7 @@ async function startRecording() {
  * @param {boolean} [shouldSend=true] - Whether to automatically send the final transcript to Gemini.
  */
 function stopRecording(shouldSend = true) {
+  // ... (rest of stopRecording is unchanged)
   if (!recording) return;
 
   // 1. Update State (Single Source of Truth)
