@@ -4,6 +4,7 @@ go 1.24.4
 
 require (
 	github.com/gorilla/websocket v1.5.3
+	github.com/lib/pq v1.10.9
 	google.golang.org/genai v1.28.0
 )
 

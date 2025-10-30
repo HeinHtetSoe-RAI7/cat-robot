@@ -35,7 +35,7 @@ COPY go.mod go.sum ./
 COPY . .
 
 # Build the binary (optimized, no cgo)
-RUN go build -ldflags="-s -w" -o gemini-server main.go
+RUN go build -ldflags="-s -w" -o gemini-server .
 
 # Runtime stage
 FROM alpine:latest

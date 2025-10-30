@@ -57,6 +57,7 @@ services:
     container_name: gemini-server
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DATABASE_URL=postgres://username:password@postgresql:5432/catgpt?sslmode=disable
     ports:
       - "8765:8765"
 <<<<<<< HEAD
@@ -148,4 +149,3 @@ volumes:
     environment:
       - VOSK_WS_URL=ws://vosk_asr:2700
       - GEMINI_WS_URL=ws://gemini-server:8765
->>>>>>> 6b067c732b1e6c581c07fcd325a2b72d456417dc

@@ -1,160 +1,159 @@
-/* body {
-    font-family: Arial, sans-serif;
+/*
+ * Inter is used for its modern, clean, and highly legible design.
+ */
+body {
+    /* FONT & Dark Mode Background */
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     display: flex;
     flex-direction: column;
     height: 100vh;
     margin: 0;
-    background-color: #f1f1f1;
-}
-h1 { text-align: center; padding: 20px 0; color: #1f73b7; }
-#messages {
-    flex-grow: 1;
-    padding: 10px;
-    margin: 0 20px 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    overflow-y: auto;
-    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
-}
-.input-container {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: white;
-    border-top: 1px solid #ddd;
-}
-#input { flex-grow: 1; padding: 10px; font-size: 16px; border:1px solid #ccc; border-radius:4px; }
-#sendButton, #micButton {
-    padding: 10px 16px;
-    margin-left: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-#sendButton { background-color: #1f73b7; color: white; }
-#sendButton:hover { background-color: #165a91; }
-#micButton { background-color: #3cba54; color: white; }
-#micButton:hover { background-color: #2a973a; }
-.message { margin-bottom: 10px; padding: 8px; border-radius: 6px; }
-.user-message { background-color: #e6f0ff; text-align: right; border-left: 4px solid #1f73b7; }
-.gemini-message { background-color: #ffffff; border-right: 4px solid #3cba54; }
-.transcript-message { background-color: #fff3e6; border-left: 4px solid #f39c12; font-style: italic; } */
-
-/* --- DARK MODE STYLES --- */
-
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Ensures full height */
-    margin: 0;
-    /* Dark background */
+    /* Deep dark background */
     background-color: #121212; 
     color: #e0e0e0; /* Light text for readability */
 }
 
+/* -------------------- Header and Status -------------------- */
 header {
-    padding: 20px 20px 0;
+    /* Use the main dark background */
+    background-color: #121212; 
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); Subtle dark shadow */
+    border-bottom: 1px solid #333;
+    padding: 10px 0;
+}
+
+h1 {
     text-align: center;
-}
-
-h1 { 
-    margin-top: 0; /* Remove default h1 top margin */
-    margin-bottom: 10px; /* Space below h1 */
     color: #7b9fff; /* Brighter accent for the header */
+    font-size: 28px;
+    padding-bottom: 10px;
+    margin: 0;
+    font-weight: 700;
 }
 
-/* New/Fixed status bar styling */
 #geminiStatus {
-    font-weight: bold;
-    font-size: 0.9em;
-    padding: 5px 0;
-    text-align: center; /* Center the text */
-    /* The color will be set dynamically by chat.js */
+    text-align: center;
+    font-size: 14px;
+    color: #a0a0a0; /* Muted status text */
+    padding-top: 5px;
+    font-weight: 500;
 }
 
+/* -------------------- Messages Container (Removed Box Look) -------------------- */
 #messages {
     flex-grow: 1;
-    padding: 10px;
-    margin: 0 20px 20px;
-    border-radius: 8px;
-    /* Lighter dark background for the chat area */
-    background-color: #1e1e1e; 
+    /* Use the main body background color to make the "box" disappear */
+    background-color: #121212; 
+    
+    /* Preserve padding/margins for internal message spacing */
+    padding: 15px;
+    margin: 15px 20px 15px; 
+    
+    border-radius: 0; /* No rounding needed */
+    box-shadow: none; /* Crucially remove the shadow */
     overflow-y: auto;
-    box-shadow: 0px 4px 6px rgba(0,0,0,0.5); /* Darker shadow */
 }
 
-/* Ensure messages area takes up available space */
-.message { 
-    margin-bottom: 10px; 
-    padding: 8px; 
-    border-radius: 6px;
-    color: #e0e0e0; 
-    word-wrap: break-word; /* Ensures long words don't overflow */
-}
-
+/* -------------------- Input Area & Buttons -------------------- */
 .input-container {
     display: flex;
     align-items: center;
-    padding: 10px 20px;
-    /* Matches the chat background */
-    background-color: #1e1e1e; 
-    border-top: 1px solid #333;
+    padding: 15px 20px;
+    background-color: #121212; /* Matches body for seamless bottom */
+    border-top: 1px solid #333; /* Darker, subtle separator line */
 }
 
-#input { 
-    flex-grow: 1; 
-    padding: 10px; 
-    font-size: 16px; 
-    /* Input field colors */
-    border: 1px solid #444; 
-    border-radius: 4px; 
-    background-color: #252525;
+#input {
+    flex-grow: 1;
+    font-size: 16px;
+    
+    /* Polished Alignment */
+    padding: 13px 0; 
+    padding-left: 15px; 
+    margin-right: 8px; 
+    
+    border: 1px solid #444; /* Darker border */
+    border-radius: 24px;
+    background-color: #252525; /* Darker input field background */
     color: #e0e0e0;
-    margin-right: 10px; /* Add space between input and buttons */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    transition: border-color 0.3s;
 }
 
+#input:focus {
+    border-color: #7b9fff; /* Highlight with accent color */
+    outline: none;
+}
+
+/* Buttons */
 #sendButton, #micButton {
-    padding: 10px 16px;
+    padding: 13px 20px; /* Matched vertical padding */
     font-size: 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: 24px;
     cursor: pointer;
-    flex-shrink: 0; /* Prevents buttons from shrinking */
+    font-weight: 600;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    line-height: 1;
 }
 
-#sendButton { 
-    background-color: #1f73b7; 
+#sendButton {
+    /* Primary Blue/Purple Accent */
+    background-color: #3f51b5; 
     color: white; 
 }
-#sendButton:hover { 
-    background-color: #165a91; 
+#sendButton:hover {
+    background-color: #303f9f;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-#micButton { 
-    background-color: #3cba54; 
+#micButton {
+    /* Secondary Green Accent */
+    background-color: #4caf50; 
     color: white; 
-    margin-left: 10px;
+    margin-left: 8px; /* Consistent gap */
 }
-#micButton:hover { 
-    background-color: #2a973a; 
-}
-
-/* Message Bubble Styles */
-.user-message { 
-    background-color: #2a3c5a; /* Darker blue shade */
-    text-align: right; 
-    border-left: 4px solid #1f73b7; 
+#micButton:hover {
+    background-color: #388e3c;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.gemini-message { 
-    background-color: #252525; /* Subtle difference from chat background */
-    border-right: 4px solid #3cba54; 
+/* -------------------- Message Bubble Styles -------------------- */
+.message {
+    margin-bottom: 12px;
+    padding: 10px 15px;
+    border-radius: 18px; 
+    max-width: 80%;
+    line-height: 1.5;
+    color: #e0e0e0;
 }
 
-.transcript-message { 
-    background-color: #4a3e2a; /* Darker orange shade */
-    border-left: 4px solid #f39c12; 
-    font-style: italic; 
+.user-message {
+    /* Dark Mode User Bubble (Subtle Blue) */
+    background-color: #2a3c5a; 
+    text-align: left;
+    margin-left: auto;
+    border-bottom-right-radius: 4px; 
+    /* Using right border for visual indicator (optional) */
+    border-right: 4px solid #3f51b5; 
+}
+
+.gemini-message {
+    /* Dark Mode AI Bubble (Slightly Lighter Dark) */
+    background-color: #252525;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+    border-left: 4px solid #4caf50;
+}
+
+.transcript-message {
+    /* Dark Mode System Message (Orange tone) */
+    background-color: #4a3e2a; 
+    border-radius: 18px;
+    text-align: center;
+    margin: 10px auto;
+    font-style: italic;
+    font-size: 0.9em;
+    color: #ffcc80; 
+    font-weight: 500;
 }
